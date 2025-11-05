@@ -1,0 +1,19 @@
+flowchart LR
+    subgraph "FAQ Match Found"
+        Q1[Customer Query:<br/>'How do I reset password?'] --> F1[FAQ Agent]
+        F1 --> M1[Match Found:<br/>'Go to Settings > Reset']
+        M1 --> S1[Specialized Agent]
+        S1 --> R1[Resolution:<br/>FAQ answer +<br/>personalization +<br/>empathy]
+    end
+
+    subgraph "No FAQ Match"
+        Q2[Customer Query:<br/>'App crashes on iOS 18'] --> F2[FAQ Agent]
+        F2 --> M2[No Match:<br/>faq_match = empty]
+        M2 --> S2[Specialized Agent]
+        S2 --> R2[Resolution:<br/>LLM generates<br/>from scratch using<br/>domain knowledge]
+    end
+
+    style M1 fill:#90EE90
+    style M2 fill:#FFB6C1
+    style R1 fill:#B4E7CE
+    style R2 fill:#FFD4A3

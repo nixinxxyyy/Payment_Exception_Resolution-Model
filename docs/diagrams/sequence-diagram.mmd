@@ -1,0 +1,41 @@
+sequenceDiagram
+    participant C as Customer
+    participant I as Intake Agent
+    participant F as FAQ Agent
+    participant CL as Classifier
+    participant S as Specialized Agent
+    participant E as Escalation Check
+    participant R as Response Gen
+
+    C->>I: Submit Query
+    I->>I: Extract key info<br/>Set priority
+    I->>F: Pass state
+
+    alt FAQ Match Found
+        F->>F: Search FAQ DB<br/>LLM semantic match
+        F->>F: Set faq_match = answer
+        Note over F: state["faq_match"] = "Go to Settings..."
+    else No FAQ Match
+        F->>F: Search FAQ DB<br/>LLM returns NO_MATCH
+        F->>F: Set faq_match = empty
+        Note over F: state["faq_match"] = ""
+    end
+
+    F->>CL: Pass state
+    CL->>CL: Categorize ticket
+    CL->>S: Route by category
+
+    alt With FAQ Context
+        S->>S: Generate resolution<br/>FAQ: Go to Settings...<br/>→ Build upon FAQ
+    else Without FAQ Context
+        S->>S: Generate resolution<br/>FAQ: None<br/>→ Create from scratch
+    end
+
+    S->>E: Pass state with resolution
+
+    alt Needs Escalation
+        E->>C: Route to human agent
+    else No Escalation Needed
+        E->>R: Generate final response
+        R->>C: Send polished response
+    end

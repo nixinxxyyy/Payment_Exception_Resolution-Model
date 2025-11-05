@@ -1,0 +1,19 @@
+# Core LangGraph and LangChain dependencies
+langgraph>=1.0.0
+langchain>=1.0.0
+langchain-openai>=1.0.0
+langchain-core>=1.0.0
+
+# FastAPI and web dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+
+# Environment and configuration
+python-dotenv>=1.0.0
+
+# HTTP requests (for testing scripts)
+requests>=2.31.0
+
+# Additional utilities
+typing-extensions>=4.8.0

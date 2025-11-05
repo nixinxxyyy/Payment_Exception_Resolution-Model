@@ -1,0 +1,46 @@
+graph TD
+    subgraph "Initial State"
+        S1[customer_query: string<br/>ticket_id: generated<br/>faq_match: ?<br/>category: ?<br/>resolution: ?<br/>needs_escalation: ?]
+    end
+
+    subgraph "After FAQ Agent"
+        S2A[FAQ MATCH:<br/>faq_match: FAQ answer<br/>history: Match found]
+        S2B[NO MATCH:<br/>faq_match: empty<br/>history: No match found]
+    end
+
+    subgraph "After Classifier"
+        S3[category: TECHNICAL/BILLING/GENERAL<br/>priority: low/medium/high]
+    end
+
+    subgraph "After Specialized Agent"
+        S4A[WITH FAQ:<br/>resolution: Enhanced FAQ answer]
+        S4B[NO FAQ:<br/>resolution: Original solution]
+    end
+
+    subgraph "After Escalation Check"
+        S5A[needs_escalation: true<br/>→ Human agent]
+        S5B[needs_escalation: false<br/>→ Response generator]
+    end
+
+    subgraph "Final State"
+        S6[final_response: Polished email<br/>status: complete]
+    end
+
+    S1 --> S2A
+    S1 --> S2B
+    S2A --> S3
+    S2B --> S3
+    S3 --> S4A
+    S3 --> S4B
+    S4A --> S5A
+    S4A --> S5B
+    S4B --> S5A
+    S4B --> S5B
+    S5B --> S6
+
+    style S2A fill:#90EE90
+    style S2B fill:#FFB6C1
+    style S4A fill:#B4E7CE
+    style S4B fill:#FFD4A3
+    style S5A fill:#FF6B6B
+    style S6 fill:#51CF66

@@ -1,0 +1,41 @@
+flowchart TD
+    Start([Customer Query]) --> Intake[Intake Agent]
+
+    Intake --> |Extract Info| FAQ[FAQ Lookup Agent]
+
+    FAQ --> |Search FAQ DB| FAQDecision{FAQ Match?}
+
+    FAQDecision --> |YES - Match Found| FAQYes[Set faq_match = Answer]
+    FAQDecision --> |NO - No Match| FAQNo[Set faq_match = empty]
+
+    FAQYes --> Classifier[Classifier Agent]
+    FAQNo --> Classifier
+
+    Classifier --> |Categorize| RouteDecision{Category?}
+
+    RouteDecision --> |TECHNICAL| Technical[Technical Support Agent]
+    RouteDecision --> |BILLING| Billing[Billing Support Agent]
+    RouteDecision --> |GENERAL| General[General Support Agent]
+
+    Technical --> |With FAQ Context| TechProcess[Generate Resolution<br/>Uses: FAQ Match + Query]
+    Billing --> |With FAQ Context| BillProcess[Generate Resolution<br/>Uses: FAQ Match + Query]
+    General --> |With FAQ Context| GenProcess[Generate Resolution<br/>Uses: FAQ Match + Query]
+
+    TechProcess --> Escalation[Escalation Evaluator]
+    BillProcess --> Escalation
+    GenProcess --> Escalation
+
+    Escalation --> |Evaluate| EscDecision{Needs<br/>Escalation?}
+
+    EscDecision --> |YES| EndEscalated([END - Human Agent])
+    EscDecision --> |NO| Response[Response Generator]
+
+    Response --> |Create Final Response| EndSuccess([END - Automated Response])
+
+    style FAQYes fill:#90EE90
+    style FAQNo fill:#FFB6C1
+    style Technical fill:#87CEEB
+    style Billing fill:#87CEEB
+    style General fill:#87CEEB
+    style EndEscalated fill:#FF6B6B
+    style EndSuccess fill:#51CF66
