@@ -35,7 +35,7 @@ def classifier_agent(state: TicketState) -> TicketState:
     llm = ChatOpenAI(
         model=config.OPENAI_MODEL,
         temperature=0.1,  # Very low temperature for consistent classification
-        openai_api_key=config.OPENAI_API_KEY
+        api_key=config.OPENAI_API_KEY
     )
 
     # Create classification prompt

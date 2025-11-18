@@ -31,7 +31,7 @@ def billing_support_agent(state: TicketState) -> TicketState:
     llm = ChatOpenAI(
         model=config.OPENAI_MODEL,
         temperature=config.TEMPERATURE,
-        openai_api_key=config.OPENAI_API_KEY
+        api_key=config.OPENAI_API_KEY
     )
 
     # Create billing support prompt

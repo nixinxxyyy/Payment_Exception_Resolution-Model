@@ -31,7 +31,7 @@ def intake_agent(state: TicketState) -> TicketState:
     llm = ChatOpenAI(
         model=config.OPENAI_MODEL,
         temperature=config.TEMPERATURE,
-        openai_api_key=config.OPENAI_API_KEY
+        api_key=config.OPENAI_API_KEY
     )
 
     # Create the intake prompt

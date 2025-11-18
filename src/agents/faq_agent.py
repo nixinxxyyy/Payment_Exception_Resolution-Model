@@ -49,7 +49,7 @@ def faq_lookup_agent(state: TicketState) -> TicketState:
     llm = ChatOpenAI(
         model=config.OPENAI_MODEL,
         temperature=0.3,  # Lower temperature for more deterministic matching
-        openai_api_key=config.OPENAI_API_KEY
+        api_key=config.OPENAI_API_KEY
     )
 
     # Create FAQ search prompt

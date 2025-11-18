@@ -49,7 +49,7 @@ def escalation_evaluator_agent(state: TicketState) -> TicketState:
     llm = ChatOpenAI(
         model=config.OPENAI_MODEL,
         temperature=0.2,  # Low temperature for consistent decision-making
-        openai_api_key=config.OPENAI_API_KEY
+        api_key=config.OPENAI_API_KEY
     )
 
     prompt = ChatPromptTemplate.from_messages([
