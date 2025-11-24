@@ -314,6 +314,81 @@ class TestEscalationAgentIndependent:
         print(f"   Reason: Keyword detected")
 
 
+class TestEscalationResponseAgentIndependent:
+    """Test Escalation Response Agent independently."""
+
+    def test_escalation_response_agent_standalone(self):
+        """Test escalation response agent can run standalone."""
+        from src.agents.escalation_response_agent import escalation_response_agent
+
+        state = {
+            "customer_query": "I need a full refund of $2000 for this broken service!",
+            "ticket_id": "TEST-ESCRESP-001",
+            "category": "BILLING",
+            "faq_match": "",
+            "resolution": "High-value refund requires account verification and approval",
+            "needs_escalation": True,
+            "final_response": "",
+            "conversation_history": [
+                "[INTAKE] Customer requesting refund",
+                "[FAQ] No match found",
+                "[CLASSIFIER] Category: BILLING",
+                "[BILLING] Resolution provided",
+                "[ESCALATION] Marked for human review"
+            ],
+            "customer_email": "test@example.com",
+            "priority": "high",
+            "timestamp": datetime.now().isoformat(),
+            "metadata": {}
+        }
+
+        result = escalation_response_agent(state)
+
+        # Verify agent execution
+        assert result is not None
+        assert result["final_response"] != ""
+        assert len(result["conversation_history"]) > 5
+        assert "[ESCALATION RESPONSE]" in result["conversation_history"][-1]
+
+        print(f"\n✅ Escalation Response Agent Test Passed")
+        print(f"   Response length: {len(result['final_response'])} chars")
+        print(f"   Preview: {result['final_response'][:150]}...")
+
+    def test_escalation_response_technical_issue(self):
+        """Test escalation response for technical category."""
+        from src.agents.escalation_response_agent import escalation_response_agent
+
+        state = {
+            "customer_query": "Critical bug in production causing data loss!",
+            "ticket_id": "TEST-ESCRESP-002",
+            "category": "TECHNICAL",
+            "faq_match": "",
+            "resolution": "Critical system issue requiring engineering investigation",
+            "needs_escalation": True,
+            "final_response": "",
+            "conversation_history": [
+                "[INTAKE] Customer reports critical bug",
+                "[CLASSIFIER] Category: TECHNICAL",
+                "[TECHNICAL] Resolution provided",
+                "[ESCALATION] Marked for human review"
+            ],
+            "customer_email": "test@example.com",
+            "priority": "high",
+            "timestamp": datetime.now().isoformat(),
+            "metadata": {}
+        }
+
+        result = escalation_response_agent(state)
+
+        # Verify escalation response generated
+        assert result is not None
+        assert result["final_response"] != ""
+
+        print(f"\n✅ Escalation Response Agent Test Passed (Technical)")
+        print(f"   Category: {result['category']}")
+        print(f"   Response: {result['final_response'][:100]}...")
+
+
 class TestResponseAgentIndependent:
     """Test Response Generator Agent independently."""
 
