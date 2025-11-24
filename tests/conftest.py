@@ -256,6 +256,7 @@ def mock_chatgpt():
         'src.agents.billing_agent',
         'src.agents.general_agent',
         'src.agents.escalation_agent',
+        'src.agents.escalation_response_agent',
         'src.agents.response_agent',
     ]
 

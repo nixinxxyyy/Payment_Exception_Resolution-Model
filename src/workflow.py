@@ -15,6 +15,7 @@ from src.agents import (
     billing_support_agent,
     general_support_agent,
     escalation_evaluator_agent,
+    escalation_response_agent,
     response_generator_agent,
 )
 
@@ -69,8 +70,9 @@ def create_workflow() -> StateGraph:
     1. intake -> faq_lookup -> classifier
     2. classifier -> [technical/billing/general] (conditional routing)
     3. specialized_agent -> escalation_check
-    4. escalation_check -> [end_escalated/response_gen] (conditional routing)
-    5. response_gen -> END
+    4. escalation_check -> [escalation_response/response_gen] (conditional routing)
+    5. escalation_response -> END (for escalated tickets)
+       response_gen -> END (for auto-resolved tickets)
 
     Returns:
         Compiled StateGraph application
@@ -88,6 +90,7 @@ def create_workflow() -> StateGraph:
     workflow.add_node("billing_support", billing_support_agent)
     workflow.add_node("general_support", general_support_agent)
     workflow.add_node("escalation_check", escalation_evaluator_agent)
+    workflow.add_node("escalation_response", escalation_response_agent)
     workflow.add_node("response_gen", response_generator_agent)
 
     # Define the workflow edges
@@ -120,12 +123,13 @@ def create_workflow() -> StateGraph:
         "escalation_check",
         handle_escalation,
         {
-            "end_escalated": END,
+            "end_escalated": "escalation_response",
             "send_response": "response_gen"
         }
     )
 
-    # Final response leads to end
+    # Both response types lead to end
+    workflow.add_edge("escalation_response", END)
     workflow.add_edge("response_gen", END)
 
     logger.info("Workflow graph created successfully")

@@ -7,6 +7,7 @@ from .technical_agent import technical_support_agent
 from .billing_agent import billing_support_agent
 from .general_agent import general_support_agent
 from .escalation_agent import escalation_evaluator_agent
+from .escalation_response_agent import escalation_response_agent
 from .response_agent import response_generator_agent
 
 __all__ = [
@@ -17,5 +18,6 @@ __all__ = [
     "billing_support_agent",
     "general_support_agent",
     "escalation_evaluator_agent",
+    "escalation_response_agent",
     "response_generator_agent",
 ]
