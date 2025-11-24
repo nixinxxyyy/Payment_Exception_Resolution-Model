@@ -15,5 +15,9 @@ python-dotenv>=1.0.0
 # HTTP requests (for testing scripts)
 requests>=2.31.0
 
+# Testing dependencies
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
 # Additional utilities
 typing-extensions>=4.8.0
