@@ -1,6 +1,4 @@
-"""
-Logging configuration for the ticket management system.
-"""
+"""Logging configuration for the Payment Exception Resolution system."""
 
 import logging
 import os
@@ -10,44 +8,30 @@ from src.config import config
 
 
 def setup_logging() -> None:
-    """
-    Configure logging for the application.
-
-    Sets up both file and console logging with appropriate formats.
-    """
-    # Create logs directory if it doesn't exist
+    """Configure file + console logging with rotation."""
     log_dir = os.path.dirname(config.LOG_FILE)
     if log_dir and not os.path.exists(log_dir):
-        os.makedirs(log_dir)
+        os.makedirs(log_dir, exist_ok=True)
 
-    # Configure logging format
-    log_format = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
+    fmt = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    # Root logger
-    root_logger = logging.getLogger()
-    root_logger.setLevel(getattr(logging, config.LOG_LEVEL.upper(), logging.INFO))
+    root = logging.getLogger()
+    root.setLevel(getattr(logging, config.LOG_LEVEL.upper(), logging.INFO))
+    root.handlers = []
 
-    # Remove existing handlers
-    root_logger.handlers = []
+    # Console
+    ch = logging.StreamHandler()
+    ch.setFormatter(fmt)
+    ch.setLevel(logging.INFO)
+    root.addHandler(ch)
 
-    # Console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(log_format)
-    console_handler.setLevel(logging.INFO)
-    root_logger.addHandler(console_handler)
+    # Rotating file
+    fh = RotatingFileHandler(config.LOG_FILE, maxBytes=10 * 1024 * 1024, backupCount=5)
+    fh.setFormatter(fmt)
+    fh.setLevel(getattr(logging, config.LOG_LEVEL.upper(), logging.INFO))
+    root.addHandler(fh)
 
-    # File handler with rotation
-    file_handler = RotatingFileHandler(
-        config.LOG_FILE,
-        maxBytes=10 * 1024 * 1024,  # 10MB
-        backupCount=5
-    )
-    file_handler.setFormatter(log_format)
-    file_handler.setLevel(getattr(logging, config.LOG_LEVEL.upper(), logging.INFO))
-    root_logger.addHandler(file_handler)
-
-    # Log startup message
-    logging.info("Logging configured successfully")
+    logging.info("Logging configured for Payment Exception Resolution system.")

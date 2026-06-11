@@ -1,142 +1,178 @@
 """
-LangGraph Workflow - Orchestrates the multi-agent ticket management system.
+LangGraph Workflow — Orchestrates the Payment Exception Resolution multi-agent system.
+
+Workflow structure:
+  ingestion
+    ↓
+  investigation
+    ↓
+  root_cause_analysis
+    ↓
+  decision
+    ↓ (conditional routing on resolution_action)
+  ┌──────────────────────────────────────────────────────────┐
+  │ AUTO_RETRY / AUTO_CORRECT /   │ CLIENT_OUTREACH          │
+  │ DUPLICATE_SUPPRESS /          │                          │
+  │ HOLD_FOR_WINDOW               │                          │
+  │         ↓                     │           ↓              │
+  │   auto_resolve                │   client_outreach        │
+  │                               │                          │
+  │ COMPLIANCE_REVIEW             │ MANUAL_REVIEW /          │
+  │         ↓                     │ CANCEL                   │
+  │   compliance_escalation       │           ↓              │
+  │                               │   manual_review          │
+  └──────────────────────────────────────────────────────────┘
+                    ↓ (all paths converge)
+                  egress
+                    ↓
+                   END
 """
 
 import logging
 
 from langgraph.graph import StateGraph, END
 
-from src.models.state import TicketState
+from src.models.state import (
+    PaymentExceptionState,
+    ResolutionAction,
+    ExceptionStatus,
+)
 from src.agents import (
-    intake_agent,
-    faq_lookup_agent,
-    classifier_agent,
-    technical_support_agent,
-    billing_support_agent,
-    general_support_agent,
-    escalation_evaluator_agent,
-    escalation_response_agent,
-    response_generator_agent,
+    ingestion_agent,
+    investigation_agent,
+    root_cause_agent,
+    decision_agent,
+    auto_resolve_agent,
+    client_outreach_agent,
+    compliance_agent,
+    manual_review_agent,
+    egress_agent,
 )
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Routing functions
+# ---------------------------------------------------------------------------
 
-def route_by_category(state: TicketState) -> str:
+def route_after_decision(state: PaymentExceptionState) -> str:
     """
-    Route ticket to appropriate specialized agent based on category.
-
-    Args:
-        state: Current ticket state
-
-    Returns:
-        Name of the next node to execute
+    Route to the appropriate execution node based on the resolution_action.
     """
-    category = state.get("category", "").strip().upper()
+    action = state.get("resolution_action", ResolutionAction.MANUAL_REVIEW.value)
 
-    logger.info(f"Routing ticket {state['ticket_id']} - Category: {category}")
+    logger.info(
+        f"[Workflow] Routing exception {state['exception_id']} "
+        f"with action={action}"
+    )
 
-    if "TECHNICAL" in category:
-        return "technical_support"
-    elif "BILLING" in category:
-        return "billing_support"
+    auto_actions = {
+        ResolutionAction.AUTO_RETRY.value,
+        ResolutionAction.AUTO_CORRECT.value,
+        ResolutionAction.DUPLICATE_SUPPRESS.value,
+        ResolutionAction.HOLD_FOR_WINDOW.value,
+    }
+
+    if action in auto_actions:
+        return "auto_resolve"
+    elif action == ResolutionAction.CLIENT_OUTREACH.value:
+        return "client_outreach"
+    elif action == ResolutionAction.COMPLIANCE_REVIEW.value:
+        return "compliance_escalation"
     else:
-        return "general_support"
+        # MANUAL_REVIEW, CANCEL, or any unknown action
+        return "manual_review"
 
 
-def handle_escalation(state: TicketState) -> str:
+def route_after_ingestion(state: PaymentExceptionState) -> str:
     """
-    Route based on escalation decision.
-
-    Args:
-        state: Current ticket state
-
-    Returns:
-        Name of the next node or END
+    Short-circuit if this is a duplicate event that has already been handled.
     """
-    if state.get("needs_escalation", False):
-        logger.info(f"Ticket {state['ticket_id']} escalated to human agent")
-        return "end_escalated"
-    else:
-        logger.info(f"Ticket {state['ticket_id']} proceeding to automated response")
-        return "send_response"
+    if state.get("is_duplicate_event") and state.get("metadata", {}).get("duplicate_suppressed"):
+        logger.info(
+            f"[Workflow] Duplicate event for {state['exception_id']} — "
+            "routing directly to egress."
+        )
+        return "egress"
+    return "investigation"
 
+
+# ---------------------------------------------------------------------------
+# Workflow factory
+# ---------------------------------------------------------------------------
 
 def create_workflow() -> StateGraph:
     """
-    Create and configure the LangGraph workflow.
-
-    Workflow structure:
-    1. intake -> faq_lookup -> classifier
-    2. classifier -> [technical/billing/general] (conditional routing)
-    3. specialized_agent -> escalation_check
-    4. escalation_check -> [escalation_response/response_gen] (conditional routing)
-    5. escalation_response -> END (for escalated tickets)
-       response_gen -> END (for auto-resolved tickets)
+    Build and compile the LangGraph StateGraph for payment exception resolution.
 
     Returns:
-        Compiled StateGraph application
+        Compiled StateGraph application ready to invoke.
     """
-    logger.info("Creating workflow graph")
+    logger.info("[Workflow] Building payment exception resolution graph...")
 
-    # Initialize the workflow
-    workflow = StateGraph(TicketState)
+    workflow = StateGraph(PaymentExceptionState)
 
-    # Add all agent nodes
-    workflow.add_node("intake", intake_agent)
-    workflow.add_node("faq_lookup", faq_lookup_agent)
-    workflow.add_node("classifier", classifier_agent)
-    workflow.add_node("technical_support", technical_support_agent)
-    workflow.add_node("billing_support", billing_support_agent)
-    workflow.add_node("general_support", general_support_agent)
-    workflow.add_node("escalation_check", escalation_evaluator_agent)
-    workflow.add_node("escalation_response", escalation_response_agent)
-    workflow.add_node("response_gen", response_generator_agent)
+    # ------------------------------------------------------------------
+    # Register nodes
+    # ------------------------------------------------------------------
+    workflow.add_node("ingestion",            ingestion_agent)
+    workflow.add_node("investigation",        investigation_agent)
+    workflow.add_node("root_cause_analysis",  root_cause_agent)
+    workflow.add_node("decision",             decision_agent)
+    workflow.add_node("auto_resolve",         auto_resolve_agent)
+    workflow.add_node("client_outreach",      client_outreach_agent)
+    workflow.add_node("compliance_escalation", compliance_agent)
+    workflow.add_node("manual_review",        manual_review_agent)
+    workflow.add_node("egress",               egress_agent)
 
-    # Define the workflow edges
+    # ------------------------------------------------------------------
+    # Entry point
+    # ------------------------------------------------------------------
+    workflow.set_entry_point("ingestion")
 
-    # Entry point: Start with intake
-    workflow.set_entry_point("intake")
+    # ------------------------------------------------------------------
+    # Edges
+    # ------------------------------------------------------------------
 
-    # Linear flow: intake -> faq_lookup -> classifier
-    workflow.add_edge("intake", "faq_lookup")
-    workflow.add_edge("faq_lookup", "classifier")
-
-    # Conditional routing by category
+    # After ingestion: check for duplicate events
     workflow.add_conditional_edges(
-        "classifier",
-        route_by_category,
+        "ingestion",
+        route_after_ingestion,
         {
-            "technical_support": "technical_support",
-            "billing_support": "billing_support",
-            "general_support": "general_support"
+            "investigation": "investigation",
+            "egress":        "egress",
         }
     )
 
-    # All specialized agents lead to escalation check
-    workflow.add_edge("technical_support", "escalation_check")
-    workflow.add_edge("billing_support", "escalation_check")
-    workflow.add_edge("general_support", "escalation_check")
+    # Linear investigation → root cause → decision
+    workflow.add_edge("investigation",       "root_cause_analysis")
+    workflow.add_edge("root_cause_analysis", "decision")
 
-    # Conditional routing based on escalation
+    # Decision fans out to execution nodes
     workflow.add_conditional_edges(
-        "escalation_check",
-        handle_escalation,
+        "decision",
+        route_after_decision,
         {
-            "end_escalated": "escalation_response",
-            "send_response": "response_gen"
+            "auto_resolve":         "auto_resolve",
+            "client_outreach":      "client_outreach",
+            "compliance_escalation": "compliance_escalation",
+            "manual_review":        "manual_review",
         }
     )
 
-    # Both response types lead to end
-    workflow.add_edge("escalation_response", END)
-    workflow.add_edge("response_gen", END)
+    # All execution nodes converge to egress
+    workflow.add_edge("auto_resolve",          "egress")
+    workflow.add_edge("client_outreach",       "egress")
+    workflow.add_edge("compliance_escalation", "egress")
+    workflow.add_edge("manual_review",         "egress")
 
-    logger.info("Workflow graph created successfully")
+    # Egress → END
+    workflow.add_edge("egress", END)
 
-    # Compile and return the workflow
+    logger.info("[Workflow] Graph built successfully.")
+
     return workflow.compile()
 
 
-# Create the compiled app
+# Compiled application — imported by the API layer
 app = create_workflow()

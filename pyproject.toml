@@ -3,38 +3,32 @@ requires = ["setuptools>=68.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "customer-support-ticket-mgmt"
-version = "1.0.0"
-description = "Multi-Agent Customer Support Ticket Management System using LangGraph"
+name = "payment-exception-resolution-agent"
+version = "2.0.0"
+description = "Production-Grade Multi-Agent System for Payment Exception Resolution"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = "MIT"
 authors = [
     {name = "Your Name", email = "your.email@example.com"}
 ]
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "Topic :: Software Development :: Libraries :: Application Frameworks",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-]
 
 dependencies = [
-    "langgraph>=1.0.0",
-    "langchain>=1.0.0",
-    "langchain-openai>=1.0.0",
-    "langchain-core>=1.0.0",
+    "langgraph>=0.2.0",
+    "langchain>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "langchain-core>=0.3.0",
     "fastapi>=0.104.0",
     "uvicorn[standard]>=0.24.0",
     "pydantic>=2.0.0",
     "python-dotenv>=1.0.0",
     "requests>=2.31.0",
+    "httpx>=0.27.0",
+    "mysql-connector-python>=8.3.0",
+    "sqlalchemy>=2.0.0",
+    "pymysql>=1.1.0",
     "typing-extensions>=4.8.0",
+    "python-dateutil>=2.8.2",
 ]
 
 [project.optional-dependencies]
@@ -43,15 +37,15 @@ dev = [
     "pytest-asyncio>=0.21.0",
 ]
 
-[project.scripts]
-ticket-system = "src.api.main:main"
-
-[project.urls]
-Homepage = "https://github.com/yourusername/customer-support-ticket-mgmt"
-Repository = "https://github.com/yourusername/customer-support-ticket-mgmt"
-
 [tool.setuptools]
-packages = ["src", "src.agents", "src.api", "src.models", "src.utils"]
+packages = [
+    "src",
+    "src.agents",
+    "src.api",
+    "src.models",
+    "src.utils",
+    "src.database",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

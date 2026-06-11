@@ -1,0 +1,30 @@
+.appRoot {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--gray-50);
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.footer {
+  background: var(--navy-900);
+  color: var(--gray-400);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  border-top: 1px solid var(--navy-700);
+}
+
+@media (max-width: 640px) {
+  .main { padding: 16px; }
+  .footer { flex-direction: column; gap: 4px; text-align: center; }
+}

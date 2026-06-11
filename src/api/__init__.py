@@ -1,1 +1,1 @@
-"""API module for the ticket management system."""
+"""API layer for the Payment Exception Resolution Agent system."""

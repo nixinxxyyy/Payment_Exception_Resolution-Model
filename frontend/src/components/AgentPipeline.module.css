@@ -1,0 +1,190 @@
+.root {
+  background: var(--navy-900);
+  border: 1px solid var(--navy-700);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+/* Header */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--navy-800);
+  border-bottom: 1px solid var(--navy-700);
+}
+.headerLeft { display: flex; align-items: center; gap: 10px; }
+.headerIcon { font-size: 18px; }
+.headerTitle { color: var(--white); font-weight: 700; font-size: 14px; }
+.headerSub { color: var(--gray-400); font-size: 11px; margin-top: 1px; }
+.headerSub code { font-family: monospace; color: var(--gold-300); }
+
+.runningChip, .doneChip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600;
+}
+.runningChip { background: rgba(201,162,39,0.15); color: var(--gold-400); border: 1px solid var(--gold-500); }
+.doneChip { background: rgba(22,163,74,0.15); color: #4ade80; border: 1px solid #16a34a; }
+.dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.pulse { animation: pulseDot 1.2s ease-in-out infinite; background: var(--gold-400); }
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* Pipeline */
+.pipeline {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.connector {
+  width: 2px; height: 12px;
+  background: var(--navy-600);
+  margin: 0 auto 0 23px;
+  transition: background 0.3s;
+}
+.connectorActive { background: var(--gold-500); }
+
+.agentRow { display: flex; flex-direction: column; }
+
+.agentCard {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+/* States */
+.done .agentCard {
+  background: rgba(22,163,74,0.08);
+  border-color: rgba(22,163,74,0.25);
+}
+.running .agentCard {
+  background: rgba(201,162,39,0.12);
+  border-color: var(--gold-500);
+  box-shadow: 0 0 12px rgba(201,162,39,0.2);
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+@keyframes glow {
+  from { box-shadow: 0 0 6px rgba(201,162,39,0.15); }
+  to   { box-shadow: 0 0 16px rgba(201,162,39,0.35); }
+}
+.pending .agentCard {
+  background: rgba(255,255,255,0.02);
+  border-color: var(--navy-600);
+  opacity: 0.5;
+}
+.skipped .agentCard {
+  background: transparent;
+  border-color: transparent;
+  opacity: 0.3;
+}
+
+/* Icon */
+.agentIcon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+  background: var(--navy-700);
+}
+.icon_done    { background: rgba(22,163,74,0.2); }
+.icon_running { background: rgba(201,162,39,0.2); animation: iconPulse 1s ease-in-out infinite alternate; }
+.icon_pending { background: var(--navy-700); }
+.icon_skipped { background: transparent; }
+@keyframes iconPulse {
+  from { background: rgba(201,162,39,0.15); }
+  to   { background: rgba(201,162,39,0.35); }
+}
+
+.spinIcon { display: inline-block; animation: spinIcon 1s linear infinite; }
+@keyframes spinIcon { to { transform: rotate(360deg); } }
+.skipIcon { color: var(--gray-600); font-size: 14px; }
+.pendingIcon { opacity: 0.4; }
+
+/* Info */
+.agentInfo { flex: 1; min-width: 0; }
+.agentName {
+  color: var(--white); font-weight: 600; font-size: 13px;
+  display: flex; align-items: center; gap: 6px;
+}
+.branchTag {
+  font-size: 9px; padding: 1px 5px; border-radius: 3px;
+  background: rgba(201,162,39,0.2); color: var(--gold-300); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+.agentDesc { margin-top: 2px; font-size: 11px; }
+.runningLabel { color: var(--gold-400); font-weight: 600; }
+.skippedLabel { color: var(--gray-600); font-style: italic; }
+.pendingLabel { color: var(--gray-500); }
+.decisionLabel {
+  color: #4ade80; font-family: monospace; font-size: 10px;
+  background: rgba(22,163,74,0.1); padding: 1px 6px; border-radius: 3px;
+}
+
+/* State indicator */
+.stateIndicator { flex-shrink: 0; width: 20px; text-align: center; }
+.checkMark { color: #4ade80; font-size: 14px; font-weight: 700; }
+.skipMark  { color: var(--gray-600); font-size: 14px; }
+.pendingMark { color: var(--gray-600); font-size: 20px; }
+.spinnerSmall {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid var(--navy-600);
+  border-top-color: var(--gold-400);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Expanded detail */
+.agentDetail {
+  margin: 3px 0 4px 52px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.03);
+  border-left: 2px solid rgba(22,163,74,0.4);
+  border-radius: 0 6px 6px 0;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.justification {
+  color: var(--gray-400); font-size: 11px; line-height: 1.5;
+}
+.chip {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 9999px; font-size: 10px; font-weight: 600;
+  width: fit-content;
+}
+
+/* Live log */
+.logSection {
+  border-top: 1px solid var(--navy-700);
+  background: #050d1a;
+}
+.logTitle {
+  padding: 8px 14px;
+  font-size: 10px; font-weight: 700; color: var(--gray-500);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  border-bottom: 1px solid var(--navy-800);
+}
+.logBody {
+  padding: 8px 14px;
+  max-height: 160px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 3px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 11px;
+}
+.logLine { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.logTime   { color: var(--gray-600); flex-shrink: 0; }
+.logAgent  { color: var(--gold-400); font-weight: 700; flex-shrink: 0; }
+.logMsg    { color: var(--gray-300); }
+.logDecision { color: #4ade80; font-weight: 600; }
+.logRunning { color: var(--gray-500); display: flex; align-items: center; gap: 5px; }
+.logCursor {
+  display: inline-block; width: 7px; height: 13px;
+  background: var(--gold-400); border-radius: 1px;
+  animation: blink 0.9s step-end infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }

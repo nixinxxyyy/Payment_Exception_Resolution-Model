@@ -1,5 +1,6 @@
 """
-Customer Support Ticket Management Multi-Agent System
+Payment Exception Resolution Agent — Multi-Agent AI System
+Production-grade system for diagnosing and resolving failed payment transactions.
 """
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"

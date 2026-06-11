@@ -1,6 +1,6 @@
-"""Utility modules for the ticket management system."""
+"""Utility modules for the Payment Exception Resolution system."""
 
 from .logger import setup_logging
-from .metrics import TicketMetrics
+from .metrics import ExceptionMetrics
 
-__all__ = ["setup_logging", "TicketMetrics"]
+__all__ = ["setup_logging", "ExceptionMetrics"]

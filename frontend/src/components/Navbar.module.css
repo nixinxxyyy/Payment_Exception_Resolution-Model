@@ -1,0 +1,113 @@
+.nav {
+  background: var(--navy-900);
+  border-bottom: 2px solid var(--gold-500);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 64px;
+  gap: 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  outline: none;
+}
+.brand:focus-visible { outline: 2px solid var(--gold-400); border-radius: 4px; }
+
+.logoMark {
+  width: 40px;
+  height: 40px;
+  background: var(--navy-700);
+  border: 1px solid var(--gold-500);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandText { display: flex; flex-direction: column; }
+.bankName {
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.systemName {
+  color: var(--gold-400);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.navList {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 4px;
+  flex: 1;
+}
+
+.navBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: var(--gray-400);
+  background: transparent;
+  transition: all 0.15s;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.navBtn:hover {
+  background: var(--navy-700);
+  color: var(--white);
+}
+.navBtn.active {
+  background: var(--navy-700);
+  color: var(--gold-400);
+  border: 1px solid var(--gold-500);
+}
+.navBtn:focus-visible {
+  outline: 2px solid var(--gold-400);
+  outline-offset: 2px;
+}
+
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--gold-500);
+  color: var(--navy-900);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.userInfo { display: flex; flex-direction: column; }
+.userName { color: var(--white); font-size: 13px; font-weight: 600; }
+.userRole { color: var(--gray-400); font-size: 11px; }
+
+@media (max-width: 768px) {
+  .nav { padding: 0 16px; gap: 16px; }
+  .brandText .systemName { display: none; }
+  .navBtn span { display: none; }
+  .userInfo { display: none; }
+}

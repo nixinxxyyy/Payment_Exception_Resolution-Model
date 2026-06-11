@@ -1,5 +1,21 @@
-"""State models for the ticket management system."""
+"""Models for the Payment Exception Resolution Agent system."""
 
-from .state import TicketState, TicketCategory
+from .state import (
+    PaymentExceptionState,
+    FailureType,
+    ResolutionAction,
+    ExceptionStatus,
+    PaymentRail,
+    RetryRecord,
+    AuditEntry,
+)
 
-__all__ = ["TicketState", "TicketCategory"]
+__all__ = [
+    "PaymentExceptionState",
+    "FailureType",
+    "ResolutionAction",
+    "ExceptionStatus",
+    "PaymentRail",
+    "RetryRecord",
+    "AuditEntry",
+]

@@ -1,5 +1,6 @@
 """
-Metrics tracking for the ticket management system.
+Metrics tracking for the Payment Exception Resolution system.
+Tracks in-memory counters; persisted stats are in MySQL.
 """
 
 import logging
@@ -9,84 +10,53 @@ from typing import Dict
 logger = logging.getLogger(__name__)
 
 
-class TicketMetrics:
-    """
-    Track and calculate performance metrics for the ticket system.
-
-    Metrics include:
-    - Total tickets processed
-    - Escalation rate
-    - Automation rate
-    - Category distribution
-    - Average response time
-    """
+class ExceptionMetrics:
+    """Track performance metrics for the payment exception resolution system."""
 
     def __init__(self):
-        """Initialize metrics tracker."""
-        self.total_tickets = 0
-        self.escalated_tickets = 0
-        self.category_counts = defaultdict(int)
-        self.response_times = []
-        logger.info("Metrics tracker initialized")
+        self.total_exceptions       = 0
+        self.escalated_exceptions   = 0
+        self.auto_resolved          = 0
+        self.failure_type_counts    = defaultdict(int)
+        self.resolution_counts      = defaultdict(int)
+        self.response_times         = []
+        logger.info("ExceptionMetrics tracker initialised.")
 
-    def record_ticket(self, category: str, escalated: bool, response_time: float):
-        """
-        Record metrics for a processed ticket.
-
-        Args:
-            category: Ticket category (TECHNICAL, BILLING, GENERAL)
-            escalated: Whether ticket was escalated to human
-            response_time: Processing time in seconds
-        """
-        self.total_tickets += 1
-        self.category_counts[category] += 1
+    def record_exception(
+        self,
+        failure_type: str,
+        resolution_action: str,
+        escalated: bool,
+        response_time: float,
+    ):
+        self.total_exceptions += 1
+        self.failure_type_counts[failure_type] += 1
+        self.resolution_counts[resolution_action] += 1
         self.response_times.append(response_time)
-
         if escalated:
-            self.escalated_tickets += 1
-
-        logger.debug(f"Recorded metrics - Total: {self.total_tickets}, Escalated: {self.escalated_tickets}")
+            self.escalated_exceptions += 1
+        else:
+            self.auto_resolved += 1
 
     def get_metrics(self) -> Dict:
-        """
-        Get current system metrics.
-
-        Returns:
-            Dictionary containing all metrics
-        """
-        automation_rate = 0.0
-        if self.total_tickets > 0:
-            automation_rate = ((self.total_tickets - self.escalated_tickets) / self.total_tickets) * 100
-
-        avg_response_time = 0.0
-        if self.response_times:
-            avg_response_time = sum(self.response_times) / len(self.response_times)
-
+        total = self.total_exceptions or 1   # avoid div-by-zero
+        avg_rt = (
+            sum(self.response_times) / len(self.response_times)
+            if self.response_times else 0.0
+        )
         return {
-            "total_tickets": self.total_tickets,
-            "escalated_tickets": self.escalated_tickets,
-            "automated_tickets": self.total_tickets - self.escalated_tickets,
-            "automation_rate": round(automation_rate, 2),
-            "escalation_rate": round(100 - automation_rate, 2),
-            "average_response_time": round(avg_response_time, 2),
-            "category_distribution": dict(self.category_counts),
-            "min_response_time": round(min(self.response_times), 2) if self.response_times else 0,
-            "max_response_time": round(max(self.response_times), 2) if self.response_times else 0,
+            "total_exceptions":         self.total_exceptions,
+            "escalated_exceptions":     self.escalated_exceptions,
+            "auto_resolved":            self.auto_resolved,
+            "automation_rate_pct":      round(self.auto_resolved / total * 100, 2),
+            "escalation_rate_pct":      round(self.escalated_exceptions / total * 100, 2),
+            "average_response_time_s":  round(avg_rt, 2),
+            "min_response_time_s":      round(min(self.response_times), 2) if self.response_times else 0,
+            "max_response_time_s":      round(max(self.response_times), 2) if self.response_times else 0,
+            "failure_type_distribution": dict(self.failure_type_counts),
+            "resolution_distribution":   dict(self.resolution_counts),
         }
 
     def reset(self):
-        """Reset all metrics."""
-        self.total_tickets = 0
-        self.escalated_tickets = 0
-        self.category_counts = defaultdict(int)
-        self.response_times = []
-        logger.info("Metrics reset")
-
-    def __str__(self) -> str:
-        """String representation of metrics."""
-        metrics = self.get_metrics()
-        return (
-            f"Tickets: {metrics['total_tickets']} | "
-            f"Automated: {metrics['automation_rate']}% | "
-            f"Avg Time: {metrics['average_response_time']}s"
-        )
+        self.__init__()
+        logger.info("ExceptionMetrics reset.")
