@@ -55,6 +55,7 @@
                     │  Seal audit trail · Emit metrics     │
                     └─────────────────────────────────────┘
 ```
+<img width="597" height="495" alt="image" src="https://github.com/user-attachments/assets/7a265433-f6ca-4599-ac93-28c4beb6d6d8" />
 
 ## Agent Catalogue
 
