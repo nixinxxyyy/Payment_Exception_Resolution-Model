@@ -22,7 +22,7 @@ export default function Navbar({ currentView, navigate }) {
         </div>
         <div className={styles.brandText}>
           <span className={styles.bankName}>First National Bank</span>
-          <span className={styles.systemName}>Payment Exception Resolution</span>
+          <span className={styles.systemName}>Payment Exception Resolution Model</span>
         </div>
       </div>
 

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document provides an in-depth analysis of how LangGraph orchestrates multiple AI agents in a production-ready customer support ticket management system. We'll explore the core LangGraph constructs, the orchestration patterns used, and how they enable sophisticated multi-agent workflows.
+This document provides an in-depth analysis of how LangGraph orchestrates multiple AI agents in the Payment Exception Resolution Model. We'll explore the core LangGraph constructs, the orchestration patterns used, and how they enable sophisticated multi-agent workflows.
 
 ## Table of Contents
 

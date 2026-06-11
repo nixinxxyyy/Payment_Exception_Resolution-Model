@@ -3,9 +3,9 @@ requires = ["setuptools>=68.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "payment-exception-resolution-agent"
+name = "payment-exception-resolution-model"
 version = "2.0.0"
-description = "Production-Grade Multi-Agent System for Payment Exception Resolution"
+description = "Payment Exception Resolution Model — Production-Grade Multi-Agent System"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"

@@ -1,7 +1,7 @@
 .PHONY: help install install-dev setup run test clean lint format
 
 help:
-	@echo "Customer Support Ticket Management System - Available Commands:"
+	@echo "Payment Exception Resolution Model - Available Commands:"
 	@echo ""
 	@echo "  make install      - Install dependencies"
 	@echo "  make install-dev  - Install with development dependencies"

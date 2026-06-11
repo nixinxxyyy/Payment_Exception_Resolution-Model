@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Customer Support Ticket Management System is a multi-agent AI system built using LangGraph and LangChain. It orchestrates 6 specialized agents to automatically process, categorize, and resolve customer support tickets.
+The Payment Exception Resolution Model is a production-grade multi-agent AI system built using LangGraph and LangChain. It orchestrates 9 specialized agents to automatically diagnose, route, and resolve failed banking payment transactions.
 
 ## Architecture Principles
 

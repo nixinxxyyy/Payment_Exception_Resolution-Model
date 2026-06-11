@@ -1,6 +1,6 @@
 # API Reference
 
-Complete API documentation for the Customer Support Ticket Management System.
+Complete API documentation for the Payment Exception Resolution Model.
 
 ## Base URL
 
@@ -25,7 +25,7 @@ Get API information and available endpoints.
 **Response:**
 ```json
 {
-  "message": "Customer Support Ticket Management System API",
+  "message": "Payment Exception Resolution Model API",
   "version": "1.0.0",
   "endpoints": {
     "process_ticket": "/api/v1/tickets/process",

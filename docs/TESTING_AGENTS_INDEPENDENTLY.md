@@ -456,7 +456,7 @@ cp data/faq_database.json.example data/faq_database.json
 
 **Solution**: Run from project root
 ```bash
-cd /path/to/customer-support-ticket-mgmt-multi-agent-system
+cd /path/to/payment-exception-resolution-model
 python scripts/test_agent_standalone.py intake "test"
 ```
 

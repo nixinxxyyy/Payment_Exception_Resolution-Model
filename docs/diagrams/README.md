@@ -1,6 +1,6 @@
 # Workflow Diagrams
 
-This directory contains visual representations of the customer support ticket management system workflow.
+This directory contains visual representations of the Payment Exception Resolution Model workflow.
 
 ## Available Diagrams
 

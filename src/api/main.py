@@ -50,7 +50,7 @@ metrics = ExceptionMetrics()
 # ---------------------------------------------------------------------------
 
 api_app = FastAPI(
-    title="Payment Exception Resolution Agent",
+    title="Payment Exception Resolution Model",
     description=(
         "A production-grade multi-agent system for diagnosing, routing, "
         "and resolving failed banking payment transactions."
@@ -250,7 +250,7 @@ def _build_initial_state(req: ExceptionSubmitRequest, exception_id: str) -> dict
 @api_app.get("/", response_model=dict)
 async def root():
     return {
-        "system": "Payment Exception Resolution Agent",
+        "system": "Payment Exception Resolution Model",
         "version": "2.0.0",
         "description": (
             "Production-grade multi-agent system for failed payment transaction resolution."

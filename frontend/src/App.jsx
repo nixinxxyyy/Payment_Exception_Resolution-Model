@@ -58,8 +58,8 @@ export default function App() {
         )}
       </main>
       <footer className={styles.footer}>
-        <span>© 2024 First National Bank · Payment Operations Platform</span>
-        <span>Powered by AI Exception Resolution Agent v2.0</span>
+        <span>© 2024 First National Bank · Payment Exception Resolution Model</span>
+        <span>Powered by AI Multi-Agent System v2.0</span>
       </footer>
     </div>
   )

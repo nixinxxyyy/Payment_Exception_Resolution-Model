@@ -1,6 +1,6 @@
 # Agent Code Walkthrough
 
-A comprehensive deep-dive into the implementation of all 8 agents in the Customer Support Ticket Management Multi-Agent System.
+A comprehensive deep-dive into the implementation of all agents in the Payment Exception Resolution Model.
 
 ---
 

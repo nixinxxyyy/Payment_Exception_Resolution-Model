@@ -1,6 +1,6 @@
-# Test Suite for Multi-Agent Ticket Management System
+# Test Suite for Payment Exception Resolution Model
 
-Comprehensive test suite for all 8 agents in the customer support ticket management system.
+Comprehensive test suite for all agents in the Payment Exception Resolution Model.
 
 ## Test Structure
 
@@ -296,7 +296,7 @@ class TestNewAgent:
 **Import errors:**
 ```bash
 # Ensure you're running from project root
-cd /path/to/customer-support-ticket-mgmt-multi-agent-system
+cd /path/to/payment-exception-resolution-model
 pytest tests/
 ```
 

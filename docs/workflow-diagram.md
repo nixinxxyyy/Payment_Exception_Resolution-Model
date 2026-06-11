@@ -1,4 +1,4 @@
-# Customer Support Ticket Workflow - Flow Diagram
+# Payment Exception Resolution Model - Workflow Diagram
 
 > **Note:** Image versions (PNG/SVG) of all diagrams are available in the [`diagrams/`](./diagrams/) directory. These are ready to use in presentations, documentation, or anywhere you need visual representations.
 

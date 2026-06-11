@@ -1,4 +1,4 @@
-# Payment Exception Resolution Agent
+# Payment Exception Resolution Model
 
 **A Production-Grade Multi-Agent AI System for Diagnosing, Routing, and Resolving Failed Banking Payment Transactions**
 

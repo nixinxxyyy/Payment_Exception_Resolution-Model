@@ -1,5 +1,5 @@
 """
-Setup configuration for the Customer Support Ticket Management System.
+Setup configuration for the Payment Exception Resolution Model.
 
 This file exists for backward compatibility with older tools.
 All configuration is now in pyproject.toml (PEP 518/621).
